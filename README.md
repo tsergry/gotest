@@ -74,6 +74,15 @@ go run main.go
 - `PUT /api/products/update` - обновить товар
 - `DELETE /api/products/delete?id=1` - удалить товар
 
+### Заказы
+- `GET /api/orders` - получить все заказы
+- `POST /api/orders` - создать новый заказ
+- `GET /api/orders/get?id=1` - получить заказ по ID
+- `GET /api/orders/user?user_id=1` - получить заказы пользователя
+- `GET /api/orders/status?status=pending` - получить заказы по статусу
+- `PUT /api/orders/update-status` - обновить статус заказа
+- `DELETE /api/orders/delete?id=1` - удалить заказ
+
 ## Команды
 
 - `go run main.go` - запуск приложения
@@ -124,4 +133,40 @@ curl http://localhost:8080/api/products/get?id=1
 #### Получение товаров по категории
 ```bash
 curl http://localhost:8080/api/products/category?category=Electronics
+```
+
+### Заказы
+
+#### Создание заказа
+```bash
+curl -X POST http://localhost:8080/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":1,"product_id":1,"quantity":2}'
+```
+
+#### Получение всех заказов
+```bash
+curl http://localhost:8080/api/orders
+```
+
+#### Получение заказа по ID
+```bash
+curl http://localhost:8080/api/orders/get?id=1
+```
+
+#### Получение заказов пользователя
+```bash
+curl http://localhost:8080/api/orders/user?user_id=1
+```
+
+#### Получение заказов по статусу
+```bash
+curl http://localhost:8080/api/orders/status?status=pending
+```
+
+#### Обновление статуса заказа
+```bash
+curl -X PUT http://localhost:8080/api/orders/update-status?id=1 \
+  -H "Content-Type: application/json" \
+  -d '{"status":"confirmed"}'
 ``` 

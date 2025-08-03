@@ -26,6 +26,9 @@ func main() {
 	
 	productRepo := models.NewProductRepository(db.DB)
 	productHandler := handlers.NewProductHandler(productRepo)
+	
+	orderRepo := models.NewOrderRepository(db.DB)
+	orderHandler := handlers.NewOrderHandler(orderRepo, productRepo, userRepo)
 
 	// Настройка маршрутов
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -64,6 +67,24 @@ func main() {
 	http.HandleFunc("/api/products/category", productHandler.GetProductsByCategory)
 	http.HandleFunc("/api/products/update", productHandler.UpdateProduct)
 	http.HandleFunc("/api/products/delete", productHandler.DeleteProduct)
+
+	// API маршруты для заказов
+	http.HandleFunc("/api/orders", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			orderHandler.GetAllOrders(w, r)
+		case http.MethodPost:
+			orderHandler.CreateOrder(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	http.HandleFunc("/api/orders/get", orderHandler.GetOrder)
+	http.HandleFunc("/api/orders/user", orderHandler.GetOrdersByUser)
+	http.HandleFunc("/api/orders/status", orderHandler.GetOrdersByStatus)
+	http.HandleFunc("/api/orders/update-status", orderHandler.UpdateOrderStatus)
+	http.HandleFunc("/api/orders/delete", orderHandler.DeleteOrder)
 
 	log.Println("Server starting on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

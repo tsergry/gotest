@@ -94,6 +94,34 @@ func main() {
 		('Coffee Maker', 'Кофемашина Philips 2200', 15999.99, 'Home', 8),
 		('Book: Go Programming', 'Учебник по программированию на Go', 2999.99, 'Books', 15)
 	ON CONFLICT DO NOTHING;
+
+	-- Создание таблицы заказов
+	CREATE TABLE IF NOT EXISTS orders (
+		id SERIAL PRIMARY KEY,
+		user_id INTEGER NOT NULL REFERENCES users(id),
+		product_id INTEGER NOT NULL REFERENCES products(id),
+		quantity INTEGER NOT NULL,
+		total_price DECIMAL(10,2) NOT NULL,
+		status VARCHAR(50) NOT NULL DEFAULT 'pending',
+		order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+
+	-- Создание индексов для заказов
+	CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+	CREATE INDEX IF NOT EXISTS idx_orders_product_id ON orders(product_id);
+	CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+	CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
+
+	-- Вставка тестовых заказов
+	INSERT INTO orders (user_id, product_id, quantity, total_price, status) VALUES 
+		(1, 1, 1, 89999.99, 'pending'),
+		(2, 3, 2, 25999.98, 'confirmed'),
+		(1, 4, 1, 15999.99, 'shipped'),
+		(3, 2, 1, 249999.99, 'delivered'),
+		(2, 5, 3, 8999.97, 'cancelled')
+	ON CONFLICT DO NOTHING;
 	`
 
 	// Выполняем SQL скрипт
