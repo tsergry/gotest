@@ -1,46 +1,60 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# Go
+backend/*.exe
+backend/*.exe~
+backend/*.dll
+backend/*.so
+backend/*.dylib
+backend/test
+backend/*.test
+backend/*.out
 
-# Test binary, built with `go test -c`
-*.test
+# Android
+mobile/android/.gradle
+mobile/android/build
+mobile/android/app/build
+mobile/android/OrdersTest/build
+mobile/android/local.properties
+mobile/android/.idea
+mobile/android/*.iml
+mobile/android/app/*.iml
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# Gradle
+.gradle/
+gradle/
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work
-
-# Environment variables
-.env
-.env.local
-.env.production
-configs/env.example
-
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS generated files
+# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
 # Logs
 *.log
 
-# Build output
+# Environment
+.env
+.env.local
+.env.production
+env.example
+shared/docs/env.example
+
+# Database
+*.db
+*.sqlite
+
+# Build artifacts
+dist/
 build/
-dist/ 
+target/
+
+# Dependencies
+node_modules/
+vendor/
+
+# Temporary files
+*.tmp
+*.temp 
