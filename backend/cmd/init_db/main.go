@@ -29,7 +29,38 @@ func main() {
 		dbPort = port
 	}
 
-	// Формируем строку подключения
+	// Сначала подключаемся к базе данных postgres для создания нашей базы данных
+	psqlInfoPostgres := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=postgres sslmode=disable",
+		dbHost, dbPort, user, password)
+
+	dbPostgres, err := sql.Open("postgres", psqlInfoPostgres)
+	if err != nil {
+		log.Fatal("Error opening postgres database:", err)
+	}
+	defer dbPostgres.Close()
+
+	// Проверяем соединение с postgres
+	if err = dbPostgres.Ping(); err != nil {
+		log.Fatal("Error connecting to postgres database:", err)
+	}
+
+	// Создаем базу данных, если она не существует
+	_, err = dbPostgres.Exec(fmt.Sprintf("CREATE DATABASE %s", dbname))
+	if err != nil {
+		// Игнорируем ошибку, если база данных уже существует
+		if !strings.Contains(err.Error(), "already exists") {
+			log.Printf("Warning: Could not create database %s: %v", dbname, err)
+		} else {
+			log.Printf("Database %s already exists", dbname)
+		}
+	} else {
+		log.Printf("Database %s created successfully", dbname)
+	}
+
+	// Закрываем соединение с postgres
+	dbPostgres.Close()
+
+	// Теперь подключаемся к нашей базе данных
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, user, password, dbname)
 
